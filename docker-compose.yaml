@@ -1,0 +1,6 @@
+services:
+  back_me_up:
+    build: .
+    volumes:
+    - D:/SEM6/CC/project/bcd:/app/files/bcd
+version: '3'
