@@ -6,7 +6,6 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError # for handling http errors
 from googleapiclient.http import MediaFileUpload # for multipart upload
 from datetime import datetime
-import time
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/drive"] # specifies the level of access allowed to the app
@@ -93,7 +92,7 @@ def upload_file(FILENAME,service):
 def create_folder(service): 
   try:
     """creating a folder on drive with the name as backup_+current_timestamp and returning the file id"""
-    current_timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
+    current_timestamp = datetime.now().strftime("%Y/%m/%d_%H:%M:%S")
     folder_metadata = {
           "name": "backup_"+current_timestamp,
           "mimeType": "application/vnd.google-apps.folder",
@@ -164,25 +163,23 @@ def upload_all_files_n_folders(service,folder_id,folder_path):
 if __name__ == "__main__":
   def main():
     path="/app/files"
-    #path = 'D:\\SEM6\\CC\\project\\bcd'
+    # path = 'D:\\SEM6\\CC\\project\\bcd'
 
-    for root, dirs,files in os.walk(path):
-      break
-    newpath = root +"/"+dirs[0] 
-    
+    # for root, dirs,files in os.walk(path):
+    #   break
+    # newpath = root +"/"+dirs[0] 
+    newpath=path
 
 
-    # if not os.path.exists(newpath):
-    #     print("\033[31mThe given path does not exist. Please check the path and try again.\033[0m")
-    #     return None
+    if not os.path.exists(newpath):
+        print("\033[31mThe given path does not exist. Please check the path and try again.\033[0m")
+        return None
       
     service = credsfunc()
 
-    while(True):
-      folder_id = create_folder(service)
-      if(upload_all_files_n_folders(service, folder_id, newpath)):
-        print("\033[34m\nUploaded all files and folders successfully!\033[0m\n")
-      print("Waiting for 60 secs to backup again\n")
-      time.sleep(60)
+    folder_id = create_folder(service)
+    if(upload_all_files_n_folders(service, folder_id, newpath)):
+      print("\033[34m\nUploaded all files and folders successfully!\033[0m\n")
+      
 
   main()
